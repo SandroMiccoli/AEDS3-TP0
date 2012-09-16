@@ -1,7 +1,7 @@
 /*
   Módulo de manipulação de matrizes alocando a memória dinâmicamente
 
-  Funções de inserção, remoção, impressão e outras manipulações.
+  Funções de inserção, leitura, impressão e outras manipulações.
 
   Criação: 15/09/12
   Autor: Sandro Miccoli
@@ -16,10 +16,20 @@ typedef struct Matriz{
     int ** matriz;
 } Matriz;
 
+// Manipulação
 void criaMatriz(int col, int lin, Matriz *matriz);
 
 int ** mallocaMatriz(int col, int lin);
 
 void destroiMatriz(Matriz *matriz);
+
+void limpaMatrizes(Matriz * m, int k);
+
+// Leitura
+void leMatrizes(FILE * arquivo, int k, Matriz * matrizes);
+
+void preencheMatriz(FILE * arquivo, Matriz m);
+
+void imprimeMatriz(Matriz m);
 
 #endif /* MATRIZ_H_ */
