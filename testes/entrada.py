@@ -39,7 +39,7 @@ k = int(sys.argv[1]) # pares de matrizes
 
 print k
 
-for i in range(k)*2: # Multiplica por 2 pois são pares
+for i in range(k)*2: # Multiplica por 2 pois são pares de matrizes
     m = random.randint(1,4)
     n = random.randint(1,4)
     print m,n
