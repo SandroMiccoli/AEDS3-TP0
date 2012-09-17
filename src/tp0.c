@@ -16,7 +16,7 @@
 
 
 int main(){
-    FILE * ent = abreArquivoLeitura("entrada/input.txt");
+    FILE * ent = abreArquivoLeitura("entrada/teste2.txt");
     FILE * out = abreArquivoEscrita("entrada/output.txt");
     int k;
     fscanf(ent, "%d ", &k); // Lê as k instâncias de pares de matriz
@@ -31,15 +31,16 @@ int main(){
 
     leMatrizes(ent, k, matrizes);
 
-    imprimeMatriz(matrizes[2]);
-    imprimeMatriz(matrizes[3]);
-
-    produtoKronecker(matrizes[2],matrizes[3],matrizesResultado);
+    imprimeMatriz(matrizes[4]);
+    imprimeMatriz(matrizes[5]);
+    printf("Resultado:\n");
+    produtoKronecker(matrizes[4],matrizes[5],matrizesResultado);
 
     // Limpando a memória
     for (int i = 0; i < k * 2; i++)
         destroiMatriz(&matrizes[i]);
     free(matrizes);
+    free(matrizesResultado);
     fechaArquivo(ent);
     fechaArquivo(out);
 
