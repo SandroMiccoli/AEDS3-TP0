@@ -51,4 +51,6 @@ void produtoKronecker (Matriz A, Matriz B, Matriz * matrizes){
 
     imprimeMatriz(C);
 
+    destroiMatriz(&C);
+
 }
