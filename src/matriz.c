@@ -1,7 +1,7 @@
 /*
   Módulo de manipulação de matrizes alocando a memória dinâmicamente
 
-  Funções de inserção, remoção, impressão e outras manipulações.
+  Funções de inserção, leitura, impressão e outras manipulações.
 
   Criação: 15/09/12
   Autor: Sandro Miccoli
@@ -32,7 +32,6 @@ int ** mallocaMatriz(int col, int lin){
         matriz[i] = (int *) malloc (lin * sizeof(int));
     }
     return matriz;
-
 }
 
 // Dá free em todos os vetores alocados pela matriz
@@ -50,7 +49,7 @@ void destroiMatriz(Matriz *matriz){
 // Lê todas as matrizes do arquivo e as insere em um vetor de matriz
 void leMatrizes(FILE * arquivo, int k, Matriz * matrizes){
 
-    int  m, n, num;
+    int  m, n;
 
     for (int i=0; i < k * 2; i++){
 
@@ -80,7 +79,6 @@ void preencheMatriz(FILE * arquivo, Matriz m){
 
 // Imprime todos os valores da matriz
 void imprimeMatriz(Matriz m){
-    int num;
 
     for (int x=0; x < m.col; x++){
             for (int y=0; y < m.lin; y++){
