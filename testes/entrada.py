@@ -27,6 +27,7 @@ Um exemplo:
 
 argv[0] = nome do arquivo
 argv[1] = pares de matrizes
+argv[2] = tamanho máx das matrizes
 
 '''
 
@@ -36,12 +37,13 @@ import sys
 #print random.randint(0,50)
 
 k = int(sys.argv[1]) # pares de matrizes
+max = int(sys.argv[2]) # pares de matrizes
 
 print k
 
 for i in range(k)*2: # Multiplica por 2 pois são pares de matrizes
-    m = random.randint(1,4)
-    n = random.randint(1,4)
+    m = random.randint(1,max)
+    n = random.randint(1,max)
     print m,n
     for j in range(m):
         for l in range(n):
