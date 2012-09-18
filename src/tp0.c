@@ -23,17 +23,16 @@ int main(int argc, char *argv[]){
 
         char entrada[20] = "entrada/";
         char saida[20] = "saida/";
+        int k; // Instâncias de matrizes
+        int i,j; // iteradores
 
         strcat(entrada,argv[1]);
         strcat(saida,argv[2]);
 
-        FILE * ent = abreArquivoLeitura(entrada);
+        FILE * inp = abreArquivoLeitura(entrada);
         FILE * out = abreArquivoEscrita(saida);
 
-
-        int k;
-        fscanf(ent, "%d ", &k); // Lê as k instâncias de pares de matriz
-       // printf("%d\n",k);
+        fscanf(inp, "%d ", &k); // Lê as k instâncias de pares de matriz
 
         Matriz * matrizes;
         Matriz * matrizesResultado;
@@ -41,20 +40,29 @@ int main(int argc, char *argv[]){
         matrizes = (struct Matriz*) malloc(k * 2 * sizeof(struct Matriz)); // Aloca espaço para todos as instãncias de matrizes
         matrizesResultado = (struct Matriz*) malloc(k * sizeof(struct Matriz)); // Aloca espaço para todos as instãncias de matrizes
 
+        leMatrizes(inp, k, matrizes);
 
-        leMatrizes(ent, k, matrizes);
+        // Realiza o produto de Kronecker entre todas as instâncias de matrizes
+        // e insere no array matrizesResultado
+        for (i = 0, j=0; i < k * 2; i+=2, j++){
+            produtoKronecker(matrizes[i],matrizes[i+1],matrizesResultado, j);
 
-        imprimeMatriz(matrizes[0]);
-        imprimeMatriz(matrizes[1]);
-        printf("Resultado:\n");
-        produtoKronecker(matrizes[0],matrizes[1],matrizesResultado);
+        }
+
+        // Imprime o resultado das operações no arquivo de saída.
+        fprintf(out,"%d\n",k);
+        for (i=0;i<k;i++)
+            imprimeMatrizNoArquivo(out,matrizesResultado[i]);
 
         // Limpando a memória
-        for (int i = 0; i < k * 2; i++)
+        for (i = 0; i < k * 2; i++)
             destroiMatriz(&matrizes[i]);
+        // Limpando a memória
+        for (j = 0; j < k; j++)
+            destroiMatriz(&matrizesResultado[j]);
         free(matrizes);
         free(matrizesResultado);
-        fechaArquivo(ent);
+        fechaArquivo(inp);
         fechaArquivo(out);
 
     }
