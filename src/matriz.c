@@ -86,5 +86,15 @@ void imprimeMatriz(Matriz m){
             }
                 printf("\n");
         }
+}
 
+// Imprime todos os valores da matriz
+void imprimeMatrizNoArquivo(FILE * arquivo, Matriz m){
+    fprintf(arquivo,"%d %d\n", m.col, m.lin);
+    for (int x=0; x < m.col; x++){
+            for (int y=0; y < m.lin; y++){
+                fprintf(arquivo, "%d ", m.matriz[x][y]);
+            }
+                fprintf(arquivo,"\n");
+        }
 }

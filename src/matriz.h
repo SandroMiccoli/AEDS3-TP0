@@ -32,4 +32,6 @@ void preencheMatriz(FILE * arquivo, Matriz m);
 
 void imprimeMatriz(Matriz m);
 
+void imprimeMatrizNoArquivo(FILE * arquivo, Matriz m);
+
 #endif /* MATRIZ_H_ */
