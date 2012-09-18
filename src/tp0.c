@@ -10,39 +10,56 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "arquivos.h"
 #include "matriz.h"
 #include "kronecker.h"
 
 
-int main(){
-    FILE * ent = abreArquivoLeitura("entrada/teste2.txt");
-    FILE * out = abreArquivoEscrita("entrada/output.txt");
-    int k;
-    fscanf(ent, "%d ", &k); // Lê as k instâncias de pares de matriz
-   // printf("%d\n",k);
-
-    Matriz * matrizes;
-    Matriz * matrizesResultado;
-
-    matrizes = (struct Matriz*) malloc(k * 2 * sizeof(struct Matriz)); // Aloca espaço para todos as instãncias de matrizes
-    matrizesResultado = (struct Matriz*) malloc(k * sizeof(struct Matriz)); // Aloca espaço para todos as instãncias de matrizes
+int main(int argc, char *argv[]){
 
 
-    leMatrizes(ent, k, matrizes);
+    if (argc == 3){ // Nome do arquivo (argv[0]) mais os dois parâmetros
 
-    imprimeMatriz(matrizes[4]);
-    imprimeMatriz(matrizes[5]);
-    printf("Resultado:\n");
-    produtoKronecker(matrizes[4],matrizes[5],matrizesResultado);
+        char entrada[20] = "entrada/";
+        char saida[20] = "saida/";
 
-    // Limpando a memória
-    for (int i = 0; i < k * 2; i++)
-        destroiMatriz(&matrizes[i]);
-    free(matrizes);
-    free(matrizesResultado);
-    fechaArquivo(ent);
-    fechaArquivo(out);
+        strcat(entrada,argv[1]);
+        strcat(saida,argv[2]);
 
+        FILE * ent = abreArquivoLeitura(entrada);
+        FILE * out = abreArquivoEscrita(saida);
+
+
+        int k;
+        fscanf(ent, "%d ", &k); // Lê as k instâncias de pares de matriz
+       // printf("%d\n",k);
+
+        Matriz * matrizes;
+        Matriz * matrizesResultado;
+
+        matrizes = (struct Matriz*) malloc(k * 2 * sizeof(struct Matriz)); // Aloca espaço para todos as instãncias de matrizes
+        matrizesResultado = (struct Matriz*) malloc(k * sizeof(struct Matriz)); // Aloca espaço para todos as instãncias de matrizes
+
+
+        leMatrizes(ent, k, matrizes);
+
+        imprimeMatriz(matrizes[0]);
+        imprimeMatriz(matrizes[1]);
+        printf("Resultado:\n");
+        produtoKronecker(matrizes[0],matrizes[1],matrizesResultado);
+
+        // Limpando a memória
+        for (int i = 0; i < k * 2; i++)
+            destroiMatriz(&matrizes[i]);
+        free(matrizes);
+        free(matrizesResultado);
+        fechaArquivo(ent);
+        fechaArquivo(out);
+
+    }
+    else{
+        printf("Número incorreto de parâmetros. Fazer seguir exemplo:\n\n\t./tp0 input.txt output.txt\n\n"); exit(0);
+    }
     return 0;
 }
