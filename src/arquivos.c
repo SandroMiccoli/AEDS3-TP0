@@ -18,7 +18,7 @@
 FILE * abreArquivoLeitura(char * arquivo) {
     FILE * ptr_arquivo = NULL;
     if ((ptr_arquivo = fopen(arquivo, "r")) == NULL){
-        printf("Erro ao abrir arquivo.\n");
+        printf("Erro ao abrir arquivo para leitura.\n");
         exit(1);
     }
     else {
@@ -33,7 +33,7 @@ FILE * abreArquivoLeitura(char * arquivo) {
 FILE * abreArquivoEscrita(char * arquivo) {
     FILE * ptr_arquivo = NULL;
     if ((ptr_arquivo = fopen(arquivo, "w")) == NULL){
-        printf("Erro ao abrir arquivo.\n");
+        printf("Erro ao abrir arquivo para escrita.\n");
         exit(1);
     }
     else {

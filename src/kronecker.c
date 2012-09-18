@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include "kronecker.h"
 
-void produtoKronecker (Matriz A, Matriz B, Matriz * matrizes){
+void produtoKronecker (Matriz A, Matriz B, Matriz * matrizesResultado, int i){
     int m, n; // Dimensões matriz A
     int p, q; // DImensões matriz B
 
@@ -27,30 +27,26 @@ void produtoKronecker (Matriz A, Matriz B, Matriz * matrizes){
     Matriz C;
     criaMatriz(m*p, n*q, &C);
 
-    //printf("m = %d, n = %d\n p = %d, q = %d\n",m,n,p,q);
-
+    // Vasculha todas as linhas e colunas da matriz A
     for (int i = 0; i < m; i++){
         for (int j = 0; j < n; j++){
+
+            // Vasculha todas as linhas e colunas da matriz B
             for (int k = 0; k < p; k++){
                 for (int l = 0; l < q; l++){
-                    //printf("_%d_\n", A.matriz[i][j] * B.matriz[k][l]);
 
                     produto = A.matriz[i][j] * B.matriz[k][l];
-                    mp = (p*i+k+1)-1; // Definição da posição
-                    nq = (q*j+l+1)-1;
-                    //printf(" %d(%d-1)+%d = %d\n",p,i,k,mp);
-                    //printf(" %d(%d-1)+%d = %d\n",q,j,l,nq);
+
+                    mp = (p*i+k+1)-1; // Definição da posição alterada pois
+                    nq = (q*j+l+1)-1; // aqui começamos de 00.
 
                     C.matriz[mp][nq] = produto;
                 }
-                //printf("\n");
             }
         }
-                //printf("\n");
     }
 
-    imprimeMatriz(C);
+    matrizesResultado[i] = C;
 
-    destroiMatriz(&C);
 
 }

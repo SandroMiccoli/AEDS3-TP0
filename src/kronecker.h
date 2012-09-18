@@ -13,4 +13,4 @@
 
 // Realiza o produto Kronecker entre duas matrizes e insere o resultado em um vetor de matrizes
 
-void produtoKronecker (Matriz A, Matriz B, Matriz * matrizes);
+void produtoKronecker (Matriz A, Matriz B, Matriz * matrizesResultado, int i);
