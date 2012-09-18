@@ -37,7 +37,7 @@ import sys
 #print random.randint(0,50)
 
 k = int(sys.argv[1]) # pares de matrizes
-max = int(sys.argv[2]) # pares de matrizes
+max = int(sys.argv[2]) # tamanho máximo da matriz
 
 print k
 
