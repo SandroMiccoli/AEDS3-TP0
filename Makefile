@@ -30,7 +30,7 @@ $(MAIN): $(OBJS)
 	@$(CC) $(CFLAGS) $< -c
 
 clean:
-	$(RM) $(MAIN) *.o
+	$(RM) $(MAIN) *.o *~ testes/*~
 	clear
 
 val: $(MAIN)
