@@ -48,5 +48,4 @@ void produtoKronecker (Matriz A, Matriz B, Matriz * matrizesResultado, int i){
 
     matrizesResultado[i] = C;
 
-
 }

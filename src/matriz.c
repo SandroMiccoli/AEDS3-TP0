@@ -70,7 +70,7 @@ void preencheMatriz(FILE * arquivo, Matriz m){
 
     for (int x=0; x < m.col; x++){
             for (int y=0; y < m.lin; y++){
-                fscanf(arquivo,"%d",&num);
+                fscanf(arquivo,"%d ",&num);
                 m.matriz[x][y] = num;
             }
         }

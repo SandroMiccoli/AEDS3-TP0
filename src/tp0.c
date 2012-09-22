@@ -21,8 +21,8 @@ int main(int argc, char *argv[]){
 
     if (argc == 3){ // Nome do arquivo (argv[0]) mais os dois parâmetros
 
-        char entrada[20] = "entrada/";
-        char saida[20] = "saida/";
+        char entrada[25] = "entrada/";
+        char saida[25] = "saida/";
         int k; // Instâncias de matrizes
         int i,j; // iteradores
 
@@ -38,12 +38,12 @@ int main(int argc, char *argv[]){
         Matriz * matrizesResultado;
 
         matrizes = (struct Matriz*) malloc(k * 2 * sizeof(struct Matriz)); // Aloca espaço para todos as instãncias de matrizes
-        matrizesResultado = (struct Matriz*) malloc(k * sizeof(struct Matriz)); // Aloca espaço para todos as instãncias de matrizes
+        matrizesResultado = (struct Matriz*) malloc(k * sizeof(struct Matriz)); // Aloca espaço para todos as instãncias de matrizes de resultado
 
-        leMatrizes(inp, k, matrizes);
+        leMatrizes(inp, k, matrizes); // Lê matrizes do arquivo e as insere no array matrizes
 
         // Realiza o produto de Kronecker entre todas as instâncias de matrizes
-        // e insere no array matrizesResultado
+        // e insere cada resultado no array matrizesResultado
         for (i = 0, j=0; i < k * 2; i+=2, j++){
             produtoKronecker(matrizes[i],matrizes[i+1],matrizesResultado, j);
 
