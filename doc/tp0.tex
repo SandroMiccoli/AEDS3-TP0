@@ -17,6 +17,7 @@
  \makeatother
  \let\algorithm\relax
  \let\endalgorithm\relax 
+\graphicspath{{./data/}}
 \usepackage[lined,algonl,ruled]{algorithm2e}
 \usepackage{multirow}
 \usepackage[brazil]{babel}   
@@ -48,12 +49,6 @@ Esse relatório descreve como foi solucionado o problema de calcular o produto de
 
 	O produto de Kronecker, também conhecido como produto tensorial ou produto direto, consiste em uma operação entre duas matrizes de tamanhos abritrários resultando em uma matriz de bloco. Em outras palavras, essa matriz resultante pode ser seccionada em submatrizes.
 
-	A seguir uma definição do produto de Kronecker:
-
-	INSERIR AQUI A IMAGEM DA DEFINIÇÃO DO PRODUTO DE KRONECKER
-%Seja \textbf{A} uma matriz \textit{m x n} e \textbf{B} uma matriz \textit{p x q}, o produto \otimes de Kronecker \textbf{A}  \textbf{B} é uma matriz \textit{mp x nq}
-
-
 	O restante deste relatório é organizado da seguinte forma. A Seção~\ref{solucao_proposta} descreve como foi feita a modelagem e manipulação das matrizes, além do método utilizado para gerar o produto tensorial entre elas. A Seção~\ref{implementacao} trata de detalhes específicos da implementação do trabalho: quais os arquivos utilizados; como é feita a compilação e execução; além de detalhar o formato dos arquivos de entrada e saída. A Seção~\ref{avaliacao_experimental} contém a avaliação experimental, quantificando o tempo de execução de cada operação com matrizes de diversos tamanhos. A Seção~\ref{conclusao} conclui o trabalho.
 
 
@@ -61,15 +56,12 @@ Esse relatório descreve como foi solucionado o problema de calcular o produto de
 \label{solucao_proposta}
 
 	Inicialmente, para trabalhar com matrizes, foi criada uma estrutura que contém a informação de quantas linhas e colunas a matriz tem, além de conter todos os elementos da matriz.
-	Como foi detalhado na especificação, a matriz foi modelada para ser alocada e desalocada dinâmicamente, através dos comandos \textit{malloc} e \textit{free}. Para confirmar que este processo de dinâmico de memória estava ocorrendo como esperado, foi utilizado o comando \textit{valgrind} para verificar qualquer tipo de vazamento de memória.
-	A solução proposta aqui foi varrer o arquivo de entrada e armazenar todas as matrizes em um array. Posteriormente, esse array é percorrido e, então, é calculado o produto de Kronecker entre cada instância.
-	Uma única diferença em relação à definição do produto de Kronecker de \cite{schafer}, foi a posição do resultado na matriz \textbf{C} do produto de dois valores das matrizes \textbf{A} e \textbf{B}. Como na nossa situação, o primeiro elemento se encontra na posição \textit{(0,0)}, e não \textit{(1,1)}, como esperado, então a posição do elemento na matriz foi alterado a posição para:
 
-	INSERIR COMO ERA PRA SER NO MODELO PADRÃO
-\begin{equation}
-	    mp = (p*i+k+1)-1;
-	    nq = (q*j+l+1)-1;
-\end{equation}
+	Como foi detalhado na especificação, a matriz foi modelada para ser alocada e desalocada dinâmicamente, através dos comandos \textit{malloc} e \textit{free}. Para confirmar que este processo de dinâmico de memória estava ocorrendo como esperado, foi utilizado o comando \textit{valgrind} para verificar qualquer tipo de vazamento de memória.
+
+	A solução proposta aqui foi varrer o arquivo de entrada e armazenar todas as matrizes em um array. Posteriormente, esse array é percorrido e, então, é calculado o produto de Kronecker entre cada instância.
+
+	Uma única diferença em relação à definição do produto de Kronecker de \cite{schafer}, foi a posição do resultado na matriz \textbf{C} do produto de dois valores das matrizes \textbf{A} e \textbf{B}. Como na nossa situação, o primeiro elemento se encontra na posição \textit{(0,0)}, e não \textit{(1,1)}, como esperado, então a posição do elemento na matriz \textbf{C} teve de ser alterada.
 	
 
 \subsection{Algoritmos}
@@ -78,9 +70,23 @@ Esse relatório descreve como foi solucionado o problema de calcular o produto de
 
 O produto de Kronecker consiste em uma operação entre duas matrizes de dimensões arbitrárias que resulta em uma matriz de bloco. A ideia do algoritmo é que cada elementro da matriz \textbf{A} multiplique todos os elementos da matriz \textbf{B} gerando diversos blocos, que, eventualmente, irão gerar a matriz de blocos \textbf{C}.
 
-A seguir uma definição do produto de Kronecker:
-
-INSERI AQUI A DEFINIÇÃO DO KRONECKER!
+A seguir uma definição do produto de Kronecker \cite{schafer}:
+\begin{quote}
+Seja \textbf{A} uma matriz \textit{m x n} e \textbf{B} uma matriz \textit{p x q}, o produto de Kronecker \textbf{C} = \textbf{A} $\bigotimes$  \textbf{B}, também conhecido como produto tensorial, é uma matriz $(mp) * (nq)$, a qual elementos são definidos como:
+	\\
+	\\
+	$
+	c_{\alpha\beta} = a_{ij}b_{kl}, \\
+	$
+	\\
+	onde \\
+	\\
+	$
+	\alpha = p (i - 1) + k \\
+	\\
+	\beta = q (j - 1) + l.
+	$
+\end{quote}
 
 INSERIR A ANÁLISE DE COMPLEXIDADE 
 
@@ -94,7 +100,7 @@ INSERIR A ANÁLISE DE COMPLEXIDADE
 \begin{itemize}
 \item \textbf{tp0.c} Arquivo principal do progrma, lê todas as instâncias de matrizes do arquivo de entrada, realiza o produto de Kronecker e insere cada resultado no arquivo de saída.
 \item \textbf{matriz.c} Contém todas as funções de manipulação, leitura e escrita de matrizes.
-\item \textbf{kronecker.c} Contém a função que efetivamente calcular o produto de Kronecker.
+\item \textbf{kronecker.c} Contém a função que efetivamente calcula o produto de Kronecker.
 \item \textbf{arquivos.c} Um tipo abstrado de dados de manipulação de arquivos, contendo funções de abertura, leitura, escrita e fechamento.
 \end{itemize}
 
@@ -231,49 +237,34 @@ Esse arquivo de saída tem a seguinte configuração:
 \section{AVALIAÇÃO EXPERIMENTAL}
 \label{avaliacao_experimental}
 
-Na Tabela \ref{tabela_teste1} vamos mostrar o tempo gasto para cada algoritmo processar várias músicas e trechos de tamanhos variados. Assim podemos verificar se esse tempo de execução está de acordo com a ordem de complexidade de cada um.
+Na figura \ref{quad} vamos mostrar o tempo gasto para cada algoritmo processar várias músicas e trechos de tamanhos variados. Assim podemos verificar se esse tempo de execução está de acordo com a ordem de complexidade de cada um.
 
 Para cada um desses testes nenhum padrão é encontrado. Isso foi feito para que os algoritmos fossem obrigados a fazer uma busca exaustiva por toda a música e o trecho. Claro que cada algoritmo tem um comportamento diferente, e isso influencia bastante nos resultados.
 
-\begin{table}[p!]
-\centering
-\begin{footnotesize}
-\begin{tabular}{|c|c|c|c|c|c|}
-\hline
-\textbf{Tamanho da música}  & \textbf{Tamanho da trecho}    & \textbf{Forca Bruta}  & \textbf{KMP}  & \textbf{BMH}  & \textbf{ShiftAndExato}  \\ \hline
-195 & 19 	& 0.000003	& 0.000005	& 0.000003	& 0.000003	 \\ \hline 
-238 & 22 	& 0.000004	& 0.000004	& 0.000003	& 0.000004	 \\ \hline 
-1461 & 25 	& 0.000021	& 0.000024	& 0.000005	& 0.000014	 \\ \hline 
-1578 & 12 	& 0.000024	& 0.000026	& 0.000006	& 0.000015	 \\ \hline 
-1972 & 23 	& 0.000029	& 0.000032	& 0.000005	& 0.000019	 \\ \hline 
-3705 & 19 	& 0.000055	& 0.000060	& 0.000009	& 0.000033	 \\ \hline 
-6758 & 45 	& 0.000102	& 0.000110	& 0.000016	& 0.000068	 \\ \hline 
-9385 & 22 	& 0.000139	& 0.000150	& 0.000020	& 0.000081	 \\ \hline 
-9750 & 35 	& 0.000141	& 0.000153	& 0.000032	& 0.000003	 \\ \hline 
-18770 & 22 	& 0.000280	& 0.000323	& 0.000050	& 0.000201	 \\ \hline 
-37540 & 31 	& 0.000561	& 0.000696	& 0.000107	& 0.000342	 \\ \hline 
-75080 & 32 	& 0.001144	& 0.001189	& 0.000132	& 0.000627	 \\ \hline 
-112620 & 32 	& 0.001670	& 0.001772	& 0.000196	& 0.000942	 \\ \hline 
-150160 & 32 	& 0.002522	& 0.002730	& 0.000292	& 0.001253	 \\ \hline 
-225240 & 32 	& 0.003322	& 0.003549	& 0.000389	& 0.002077	 \\ \hline 
- 
 
+%Para melhor visualização, geramos um gráfico com os dados da Tabela \ref{tabela_teste1}. O algorimo BMH possui o melhor desempenho quando se trata de tempo de execução. Para uma música de $225.240$ notas e um trecho de $32$ ele demorou cerca de $0.000389$ segundos para pesquisar o padrão por todo o texto.
 
-\end{tabular}
-\end{footnotesize}
-\caption{Tempo gasto por cada algoritmo \label{tabela_teste1}}
-\end{table}
-
-Para melhor visualização, geramos um gráfico com os dados da Tabela \ref{tabela_teste1}. O algorimo BMH possui o melhor desempenho quando se trata de tempo de execução. Para uma música de $225.240$ notas e um trecho de $32$ ele demorou cerca de $0.000389$ segundos para pesquisar o padrão por todo o texto.
-
-Os dois métodos que tiveram o pior resultado foi o Força Bruta e o KMP. Na grande maioria dos casos o KMP registrou um tempo de execução maior que o de força bruta. Isso ocorre pois ele precisa pré-processar o padrão e gerar a tabela de deslocamento. 
+%Os dois métodos que tiveram o pior resultado foi o Força Bruta e o KMP. Na grande maioria dos casos o KMP registrou um tempo de execução maior que o de força bruta. Isso ocorre pois ele precisa pré-processar o padrão e gerar a tabela de deslocamento. 
 
 \begin{figure}[p!]
-\centering
-{
-\centering
-}
-\caption{Tempo de execução de cada algoritmo \label{grafico2}}
+	\centering
+	\includegraphics[width=1\textwidth]{graph_quad.png}
+	\caption{Matrizes Quadradas}
+	\label{quad}
+\end{figure}
+
+\begin{figure}[p!]
+	\centering
+	\includegraphics[width=1\textwidth]{graph_lin.png}
+	\caption{Matrizes Quadradas}
+	\label{quad}
+\end{figure}
+
+\begin{figure}[p!]
+	\centering
+	\includegraphics[width=1\textwidth]{graph_col.png}
+	\caption{Matrizes Quadradas}
+	\label{quad}
 \end{figure}
 
 
