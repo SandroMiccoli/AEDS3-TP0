@@ -11,14 +11,19 @@ arqAppend = ' >> '
 arqNew = ' > '
 
 
-for i in range(20):
+for i in range(100):
 	i+=1
 	i*=5
-	teste = script+' 1 '+str(i)+' '+str(i)+' '
+	#teste = script+' 1 '+str(i)+' '+str(i)+' ' # Matrizes quadradas
+	#teste = script+' 1 10 '+str(i) # linhas fixas em 10
+	teste = script+' 1 '+str(i)+' 10' # colunas fixas em 10
 	arqEnt= 'ent'+str(i)+'.txt'
 	arqSai= 'sai'+str(i)+'.txt'
 	arqTmp= 'tmp'+str(i)+'.txt'
 	os.system(teste+arqNew+ent+arqEnt)
 	os.system('./tp0 '+arqEnt+' '+arqSai)
 	os.system('/usr/bin/./time -o '+tempo+arqTmp+' ./tp0 '+arqEnt+' '+arqSai)
+
 os.system('ls '+ent)
+os.system('ls '+sai)
+os.system('ls '+tempo)
