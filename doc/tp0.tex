@@ -86,9 +86,10 @@ Seja \textbf{A} uma matriz \textit{m x n} e \textbf{B} uma matriz \textit{p x q}
 	\\
 	\beta = q (j - 1) + l.
 	$
+	\\
 \end{quote}
 
-INSERIR A ANÁLISE DE COMPLEXIDADE 
+O algoritmo percorre as linhas e colunas da matriz \textbf{A} e da matriz \textbf{B} para realizar todas as operações. Então, podemos definir que sua complexidade terá um limite superior de $O(n^4)$.  
 
 \section{IMPLEMENTAÇÃO}
 \label{implementacao}
@@ -237,38 +238,40 @@ Esse arquivo de saída tem a seguinte configuração:
 \section{AVALIAÇÃO EXPERIMENTAL}
 \label{avaliacao_experimental}
 
-Na figura \ref{quad} vamos mostrar o tempo gasto para cada algoritmo processar várias músicas e trechos de tamanhos variados. Assim podemos verificar se esse tempo de execução está de acordo com a ordem de complexidade de cada um.
+Primeiro, foi criado um script, em Python, para gerar arquivos de entrada para o trabalho. Esse programa recebia como parâmetro o número de instâncias a ser criado e o número máximo de linhas e colunas que essas matrizes teriam. Posteriormente foi feito outro script para gerar um lotes de arquivos de entrada e já armazenar o tempo de processamento de cada um.
 
-Para cada um desses testes nenhum padrão é encontrado. Isso foi feito para que os algoritmos fossem obrigados a fazer uma busca exaustiva por toda a música e o trecho. Claro que cada algoritmo tem um comportamento diferente, e isso influencia bastante nos resultados.
+	O primeiro teste realizado foi o seguinte: foi fixado o número de linhas e colunas das matrizes para 50. Ou seja, cada matriz tinha $2.500$ elementos, e as matrizes resultado tinham $6.250.000$ elementos cada uma. Na Figura \ref{instancias}, podemos ver que o tempo de processamento cresceu de uma maneira esperada.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{graph_inst.png}
+	\caption{Instâncias de 50 x 50}
+	\label{instancias}
+\end{figure}
+
+	Na figura \ref{quadradas} foi feito um teste com matrizes quadradas. Tanto a matriz \textbf{A}, quanto a matriz \textbf{B} variaram o tamanho de $ 1 * 1 $ para $ 100 * 100 $. Ou seja, num momento tinham apenas um elemento e no último tinham $10.000$ elementos. A matriz \textbf{C}, no final desse teste, possuía $100.000.000$ elementos.
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{graph_quad.png}
+	\caption{Matrizes Quadradas A(x,x) B(x,x)}
+	\label{quadradas}
+\end{figure}
 
 
 %Para melhor visualização, geramos um gráfico com os dados da Tabela \ref{tabela_teste1}. O algorimo BMH possui o melhor desempenho quando se trata de tempo de execução. Para uma música de $225.240$ notas e um trecho de $32$ ele demorou cerca de $0.000389$ segundos para pesquisar o padrão por todo o texto.
 
 %Os dois métodos que tiveram o pior resultado foi o Força Bruta e o KMP. Na grande maioria dos casos o KMP registrou um tempo de execução maior que o de força bruta. Isso ocorre pois ele precisa pré-processar o padrão e gerar a tabela de deslocamento. 
 
-\begin{figure}[p!]
-	\centering
-	\includegraphics[width=1\textwidth]{graph_quad.png}
-	\caption{Matrizes Quadradas}
-	\label{quad}
-\end{figure}
 
 \begin{figure}[p!]
 	\centering
 	\includegraphics[width=1\textwidth]{graph_lin.png}
-	\caption{Matrizes Quadradas}
-	\label{quad}
+	\caption{Quadradas}
+	\label{lin}
 \end{figure}
 
-\begin{figure}[p!]
-	\centering
-	\includegraphics[width=1\textwidth]{graph_col.png}
-	\caption{Matrizes Quadradas}
-	\label{quad}
-\end{figure}
-
-
-Na Tabela \ref{tabela_teste2} a análise foi diferente. As mesmas melodias foram utilizadas, porém nessa tabela foi analisado o número de comparações que cada algoritmo faz.
 
 
 \begin{table}[p!]
