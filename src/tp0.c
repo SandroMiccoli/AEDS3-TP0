@@ -21,8 +21,8 @@ int main(int argc, char *argv[]){
 
     if (argc == 3){ // Nome do arquivo (argv[0]) mais os dois parâmetros
 
-        char entrada[25] = "entrada/";
-        char saida[25] = "saida/";
+        char entrada[40] = "entrada/";
+        char saida[40] = "saida/";
         int k; // Instâncias de matrizes
         int i,j; // iteradores
 
