@@ -44,7 +44,7 @@
 \maketitle
 
 \begin{resumo}
-Esse relatório descreve como foi solucionado o problema de calcular o produto de Kronecker, também conhecido como produto tensorial ou produto direto. Será descrito também a modelagem do problema e a solução proposta para tal. Finalmente será detalhado a análise de complexidade dos algoritmos e uma breve conclusão do trabalho implementado.
+Esse relatório descreve como foi solucionado o problema de calcular o produto de Kronecker, também conhecido como produto tensorial ou produto direto. Será descrito também a modelagem do problema e a solução proposta para tal. Finalmente será detalhado a análise de complexidade dos algoritmos, os testes utilizados para comprovar tais análises e uma breve conclusão do trabalho implementado.
 
 \end{resumo}
 
@@ -54,10 +54,11 @@ Esse relatório descreve como foi solucionado o problema de calcular o produto de
 
 	O produto de Kronecker, também conhecido como produto tensorial ou produto direto, consiste em uma operação entre duas matrizes de tamanhos abritrários resultando em uma matriz de bloco. Em outras palavras, essa matriz resultante pode ser seccionada em submatrizes.
 
-	O restante deste relatório é organizado da seguinte forma. A Seção~\ref{solucao_proposta} descreve como foi feita a modelagem e manipulação das matrizes, além do método utilizado para gerar o produto tensorial entre elas. A Seção~\ref{implementacao} trata de detalhes específicos da implementação do trabalho: quais os arquivos utilizados; como é feita a compilação e execução; além de detalhar o formato dos arquivos de entrada e saída. A Seção~\ref{avaliacao_experimental} contém a avaliação experimental, quantificando o tempo de execução de cada operação com matrizes de diversos tamanhos. A Seção~\ref{conclusao} conclui o trabalho.
+	O restante deste relatório é organizado da seguinte forma. A Seção~\ref{modelagem} descreve como foi feita a modelagem e manipulação das matrizes. A Seção \ref{solucao_proposta} descreve rapidamente qual foi a solução proposta além do método utilizado para gerar o produto tensorial entre as instâncias de matrizes. A Seção~\ref{implementacao} trata de detalhes específicos da implementação do trabalho: quais os arquivos utilizados; como é feita a compilação e execução; além de detalhar o formato dos arquivos de entrada e saída. A Seção~\ref{avaliacao_experimental} contém a avaliação experimental, quantificando o tempo de execução de cada operação com matrizes de diversos tamanhos. A Seção~\ref{conclusao} conclui o trabalho.
 
 
 \section{MODELAGEM}
+\label{modelagem}
 
 	Inicialmente, para trabalhar com matrizes, foi criada uma estrutura que contém a informação de quantas linhas e colunas a matriz tem, além de conter todos os elementos da matriz.
 
@@ -286,19 +287,19 @@ Esse arquivo de saída tem a seguinte configuração:
 
 \section{AVALIAÇÃO EXPERIMENTAL}
 \label{avaliacao_experimental}
-
+	
+Foram gerados arquivos de vários tipos para testar, depois foi usado o comando \textit{time} para calcular o tempo de execução de cada configuração de teste diferente. Nas próximas duas subseções vamos detalhar os scripts que foram criados para gerar esses arquivos de testes, além de demonstrar os resultados de cada teste.
 
 \subsection{Scripts}
-Primeiro, foi criado um script, em Python, para gerar arquivos de entrada para o trabalho. Esse programa recebia como parâmetro o número de instâncias a ser criado e o número máximo de linhas e colunas que essas matrizes teriam. Posteriormente foi feito outro script para gerar um lotes de arquivos de entrada e já armazenar o tempo de processamento de cada um.
+Primeiro, foi criado um script, em Python, para gerar arquivos de entrada para o trabalho. Esse programa recebe como parâmetro o número de instâncias a ser criado e o número máximo de linhas e colunas que essas matrizes terão. 
 
-A seguir os dois scripts:
+Posteriormente foi feito outro script para gerar um lotes de arquivos de entrada e já armazenar o tempo de processamento de cada um.
+
+Primeiro, o script que gera o arquivo de entrada:\\
 
 \begin{python}
 
-import random
-import sys
-
-#print random.randint(0,50)
+import random,sys
 
 k = int(sys.argv[1]) # pares de matrizes
 maxX = int(sys.argv[2]) # tamanho máximo de linhas da matriz
@@ -307,8 +308,6 @@ maxY = int(sys.argv[3]) # tamanho máximo de colunas da matriz
 print k
 
 for i in range(k)*2: # Multiplica por 2 pois são pares de matrizes
-    #m = random.randint(1,maxX)
-    #n = random.randint(1,maxY)
     m = maxX
     n = maxY
     print m,n
@@ -319,6 +318,7 @@ for i in range(k)*2: # Multiplica por 2 pois são pares de matrizes
 
 \end{python}
 
+Segundo, o script que utiliza o primeiro para fazer um \textit{batch} de testes:\\
 
 \begin{python}
 
@@ -343,12 +343,8 @@ for i in range(100):
 	arqSai= 'sai'+str(i)+'.txt'
 	arqTmp= 'tmp'+str(i)+'.txt'
 	os.system(teste+arqNew+ent+arqEnt)
-	#os.system('./tp0 '+arqEnt+' '+arqSai)
 	os.system('/usr/bin/./time -o '+tempo+arqTmp+' ./tp0 '+arqEnt+' '+arqSai)
 
-os.system('ls '+ent)
-os.system('ls '+sai)
-os.system('ls '+tempo)
 
 \end{python}
 
@@ -396,11 +392,15 @@ No primeiro, Figura \ref{linhas}, fixamos as colunas das matrizes em $10$ e vari
 \section{CONCLUSÃO}
 \label{conclusao}
 
-O problema de calcular o produto de Kronecker das matriz foi um problema sem muitas complicações. As matrizes foram alocadas dinâmicamente com sucesso, de acordo com o \textit{Valgrind}. Além disso, um padrão de código bem modularizado foi seguido, para que os módulos possam ser reutilizados futuramente.
+	O problema de calcular o produto de Kronecker das matriz foi um problema sem muitas complicações. As matrizes foram alocadas dinâmicamente com sucesso, de acordo com o \textit{Valgrind}. Além disso, um padrão de código bem modularizado foi seguido, para que os módulos possam ser reutilizados futuramente.
 
-Os testes foram bem sucedidos pois o tempo de processamento do algoritmo em diversas situações ocorreu exatamente como esperado.
+	O código também já foi construído de uma maneira em que, caso futuramente seja necessário paralelizá-lo, poucas mudanças no código precisarão ser feitas para tal.
 
-Como primeiro trabalho da disciplina, acredito que seus objetivos foram cumpridos. As primitivas básicas da linguagem C, como alocação dinâmica de memória e manipulação de arquivos, foram bem exploradas no trabalho prático.
+	Os testes foram bem sucedidos pois o tempo de processamento do algoritmo em diversas situações ocorreu exatamente como esperado.
+
+	As primitivas básicas da linguagem C, como alocação dinâmica de memória e manipulação de arquivos, foram bem exploradas no trabalho prático. Além disso, procurei construir uma documentação bem detalhada sobre toda a estrutura e funcionamento do programa construído. 
+
+	Como primeiro trabalho da disciplina, acredito que seus objetivos foram cumpridos. 
 
 \bibliographystyle{sbc}
 \bibliography{tp0}
