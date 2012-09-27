@@ -71,7 +71,7 @@ Esse relatório descreve como foi solucionado o problema de calcular o produto de
 
 \end{alltt}
 
-	A complexidade dessa estrutura pode ser considerada como $O(n)$, sendo $n$ o tamanho da matriz bidimensional, ou seja, o produto entre a quantidade de linhas e colunas que ela possui.
+	A complexidade dessa estrutura pode ser considerada como $O(n)$, sendo $n$ o tamanho bidimensional da matriz, ou seja, o produto entre a quantidade de linhas e colunas que ela possui.
 
 	Como foi detalhado na especificação, a matriz foi modelada para ser alocada e desalocada dinâmicamente, através dos comandos \textit{malloc} e \textit{free}. Para confirmar que este processo de dinâmico de memória estava ocorrendo como esperado, foi utilizado o comando \textit{valgrind} para verificar qualquer tipo de vazamento de memória.
 
@@ -293,7 +293,7 @@ Foram gerados arquivos de vários tipos para testar, depois foi usado o comando \
 \subsection{Scripts}
 Primeiro, foi criado um script, em Python, para gerar arquivos de entrada para o trabalho. Esse programa recebe como parâmetro o número de instâncias a ser criado e o número máximo de linhas e colunas que essas matrizes terão. 
 
-Posteriormente foi feito outro script para gerar um lotes de arquivos de entrada e já armazenar o tempo de processamento de cada um.
+Posteriormente foi feito outro script para gerar um lote de arquivos de entrada e já armazenar o tempo de processamento de cada um.
 
 Primeiro, o script que gera o arquivo de entrada:\\
 
@@ -392,15 +392,13 @@ No primeiro, Figura \ref{linhas}, fixamos as colunas das matrizes em $10$ e vari
 \section{CONCLUSÃO}
 \label{conclusao}
 
-	O problema de calcular o produto de Kronecker das matriz foi um problema sem muitas complicações. As matrizes foram alocadas dinâmicamente com sucesso, de acordo com o \textit{Valgrind}. Além disso, um padrão de código bem modularizado foi seguido, para que os módulos possam ser reutilizados futuramente.
+	O problema de calcular o produto de Kronecker das matriz foi solucionado sem muitas complicações. As matrizes foram alocadas dinâmicamente com sucesso, de acordo com o \textit{Valgrind}. Além disso, um padrão de código bem modularizado foi seguido, para que os módulos possam ser reutilizados futuramente.
 
 	O código também já foi construído de uma maneira em que, caso futuramente seja necessário paralelizá-lo, poucas mudanças no código precisarão ser feitas para tal.
 
-	Os testes foram bem sucedidos pois o tempo de processamento do algoritmo em diversas situações ocorreu exatamente como esperado.
+	Os testes foram bem sucedidos pois o tempo de processamento do algoritmo em diversas situações ocorreu como esperado.
 
-	As primitivas básicas da linguagem C, como alocação dinâmica de memória e manipulação de arquivos, foram bem exploradas no trabalho prático. Além disso, procurei construir uma documentação bem detalhada sobre toda a estrutura e funcionamento do programa construído. 
-
-	Como primeiro trabalho da disciplina, acredito que seus objetivos foram cumpridos. 
+	As primitivas básicas da linguagem C, como alocação dinâmica de memória e manipulação de arquivos, foram bem exploradas no trabalho prático. Além disso, procurei construir uma documentação bem detalhada sobre toda a estrutura e funcionamento do programa implementado. 
 
 \bibliographystyle{sbc}
 \bibliography{tp0}
