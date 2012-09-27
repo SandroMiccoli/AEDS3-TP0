@@ -21,18 +21,23 @@
 \usepackage[lined,algonl,ruled]{algorithm2e}
 \usepackage{multirow}
 \usepackage[brazil]{babel}   
-\usepackage[latin1]{inputenc}  
+\usepackage[latin1]{inputenc}
+\usepackage{pythonhighlighting}
+
+\usepackage{alltt}
+\renewcommand{\ttdefault}{txtt}
 
 \sloppy
 
 \title{TRABALHO PRÁTICO 0: \\ Produto de Kronecker}
 
-\author{Sandro Miccoli - 2009052409}
+\author{Sandro Miccoli - 2009052409 - smiccoli@dcc.ufmg.br}
 
-\address{Departamento de Ciência da Computação -- Universidade Federal de Minas Gerais (UFMG)
-\email{smiccoli@dcc.ufmg.br}
-\date{25/09/2011}
+\address{Departamento de Ciência da Computação -- Universidade Federal de Minas Gerais (UFMG)\\
+\\
+\today 
 }
+
 
 \begin{document} 
 
@@ -52,17 +57,41 @@ Esse relatório descreve como foi solucionado o problema de calcular o produto de
 	O restante deste relatório é organizado da seguinte forma. A Seção~\ref{solucao_proposta} descreve como foi feita a modelagem e manipulação das matrizes, além do método utilizado para gerar o produto tensorial entre elas. A Seção~\ref{implementacao} trata de detalhes específicos da implementação do trabalho: quais os arquivos utilizados; como é feita a compilação e execução; além de detalhar o formato dos arquivos de entrada e saída. A Seção~\ref{avaliacao_experimental} contém a avaliação experimental, quantificando o tempo de execução de cada operação com matrizes de diversos tamanhos. A Seção~\ref{conclusao} conclui o trabalho.
 
 
-\section{MODELAGEM E SOLUÇÃO PROPOSTA}
-\label{solucao_proposta}
+\section{MODELAGEM}
 
 	Inicialmente, para trabalhar com matrizes, foi criada uma estrutura que contém a informação de quantas linhas e colunas a matriz tem, além de conter todos os elementos da matriz.
 
+\begin{alltt}
+
+\textbf{struct} \textbf{Matriz}{
+    \textbf{int} col, lin;
+    \textbf{int} ** matriz;
+} Matriz;
+
+\end{alltt}
+
+	A complexidade dessa estrutura pode ser considerada como $O(n)$, sendo $n$ o tamanho da matriz bidimensional, ou seja, o produto entre a quantidade de linhas e colunas que ela possui.
+
 	Como foi detalhado na especificação, a matriz foi modelada para ser alocada e desalocada dinâmicamente, através dos comandos \textit{malloc} e \textit{free}. Para confirmar que este processo de dinâmico de memória estava ocorrendo como esperado, foi utilizado o comando \textit{valgrind} para verificar qualquer tipo de vazamento de memória.
 
-	A solução proposta aqui foi varrer o arquivo de entrada e armazenar todas as matrizes em um array. Posteriormente, esse array é percorrido e, então, é calculado o produto de Kronecker entre cada instância.
+	Além disso, vários procedimentos foram criados para manipular as matrizes em um módulo específico. Essas funções são:
+\\
+\begin{description}
+  \item[criaMatriz] Cria a matriz
+  \item[mallocaMatriz]  Maloca todas as linhas e colunas da matriz
+  \item[destroiMatriz] Dá free em todos os vetores alocados pela matriz
+  \item[leMatrizes] Lê todas as matrizes do arquivo e as insere em um vetor de matriz
+  \item[preencheMatriz] Preenche a matriz m com os valores da matriz do arquivo.
+  \item[imprimeMatriz] Imprime todos os valores da matriz
+  \item[imprimeMatrizNoArquivo] Imprime todos os valores da matriz no arquivo
+\end{description}
 
-	Uma única diferença em relação à definição do produto de Kronecker de \cite{schafer}, foi a posição do resultado na matriz \textbf{C} do produto de dois valores das matrizes \textbf{A} e \textbf{B}. Como na nossa situação, o primeiro elemento se encontra na posição \textit{(0,0)}, e não \textit{(1,1)}, como esperado, então a posição do elemento na matriz \textbf{C} teve de ser alterada.
-	
+\section{SOLUÇÃO PROPOSTA}
+\label{solucao_proposta}
+
+	A solução proposta aqui foi varrer o arquivo de entrada e armazenar todas as matrizes em um array. Posteriormente, esse array de matrizes é percorrido e, então, é calculado o produto de Kronecker entre cada instância. Por último, essas matrzies resultado são escritas no arquivo.
+
+	Foi criado um módulo apenas para o produto de Kronecker. Este módulo possui apenas um procedimento, o \textbf{produtoKronecker}, que, efetivamente, calcula o produto tensorial entre duas matrizes e insere o resultado em um array.
 
 \subsection{Algoritmos}
 
@@ -87,6 +116,26 @@ Seja \textbf{A} uma matriz \textit{m x n} e \textbf{B} uma matriz \textit{p x q}
 	\beta = q (j - 1) + l.
 	$
 	\\
+\end{quote}
+
+Uma única diferença em relação à definição do produto de Kronecker de \cite{schafer}, foi a posição do resultado na matriz \textbf{C} do produto de dois valores das matrizes \textbf{A} e \textbf{B}. Como na nossa situação, o primeiro elemento se encontra na posição \textit{(0,0)}, e não \textit{(1,1)}, como esperado, então a posição do elemento na matriz \textbf{C} teve de ser alterada para o seguinte:
+
+\begin{quote}
+
+	$
+	c_{\alpha\beta} = a_{ij}b_{kl}, \\
+	$
+	\\
+	onde \\
+	\\
+	$
+	\alpha = (p * i + k) - 1 \\
+	\\
+	\beta = (q * j + l) - 1.
+	$
+	\\
+
+
 \end{quote}
 
 O algoritmo percorre as linhas e colunas da matriz \textbf{A} e da matriz \textbf{B} para realizar todas as operações. Então, podemos definir que sua complexidade terá um limite superior de $O(n^4)$.  
@@ -238,91 +287,120 @@ Esse arquivo de saída tem a seguinte configuração:
 \section{AVALIAÇÃO EXPERIMENTAL}
 \label{avaliacao_experimental}
 
+
+\subsection{Scripts}
 Primeiro, foi criado um script, em Python, para gerar arquivos de entrada para o trabalho. Esse programa recebia como parâmetro o número de instâncias a ser criado e o número máximo de linhas e colunas que essas matrizes teriam. Posteriormente foi feito outro script para gerar um lotes de arquivos de entrada e já armazenar o tempo de processamento de cada um.
 
-	O primeiro teste realizado foi o seguinte: foi fixado o número de linhas e colunas das matrizes para 50. Ou seja, cada matriz tinha $2.500$ elementos, e as matrizes resultado tinham $6.250.000$ elementos cada uma. Na Figura \ref{instancias}, podemos ver que o tempo de processamento cresceu de uma maneira esperada.
+A seguir os dois scripts:
 
-\begin{figure}[h!]
+\begin{python}
+
+import random
+import sys
+
+#print random.randint(0,50)
+
+k = int(sys.argv[1]) # pares de matrizes
+maxX = int(sys.argv[2]) # tamanho máximo de linhas da matriz
+maxY = int(sys.argv[3]) # tamanho máximo de colunas da matriz
+
+print k
+
+for i in range(k)*2: # Multiplica por 2 pois são pares de matrizes
+    #m = random.randint(1,maxX)
+    #n = random.randint(1,maxY)
+    m = maxX
+    n = maxY
+    print m,n
+    for j in range(m):
+        for l in range(n):
+            print random.randint(0,100),
+        print ''
+
+\end{python}
+
+
+\begin{python}
+
+import sys,os,random
+
+ent = 'entrada/'
+sai = 'saida/'
+tempo = 'tempo/'
+script = './testes/entrada.py '
+arqAppend = ' >> '
+arqNew = ' > '
+
+
+for i in range(100):
+	i+=1
+	i*=5
+	#teste1 = script+' 1 '+str(i)+' '+str(i)+' ' # Matrizes quadradas
+	#teste2 = script+' 1 10 '+str(i) # linhas fixas em 10
+	#teste3 = script+' 1 '+str(i)+' 10' # colunas fixas em 10
+	teste = script+' '+str(i)+' 50 50' # linhas e colunas fixas em 50 + nº de instâncias variando
+	arqEnt= 'ent'+str(i)+'.txt'
+	arqSai= 'sai'+str(i)+'.txt'
+	arqTmp= 'tmp'+str(i)+'.txt'
+	os.system(teste+arqNew+ent+arqEnt)
+	#os.system('./tp0 '+arqEnt+' '+arqSai)
+	os.system('/usr/bin/./time -o '+tempo+arqTmp+' ./tp0 '+arqEnt+' '+arqSai)
+
+os.system('ls '+ent)
+os.system('ls '+sai)
+os.system('ls '+tempo)
+
+\end{python}
+
+\subsection{Resultado}
+
+	O primeiro teste realizado foi o seguinte: foi fixado o número de linhas e colunas das matrizes para 50. Ou seja, cada matriz tinha $2.500$ elementos, e as matrizes resultado tinham $6.250.000$ elementos cada uma. 
+
+	Na Figura \ref{instancias}, podemos ver que o tempo de processamento cresceu de uma maneira esperada. Como a complexidade do algoritmo é definida basicamente pelo tamanho das matrizes, então uma variação do número de instâncias resulta em um crescimento praciamente constante no tempo de processamento do programa.
+
+\begin{figure}[p!]
 	\centering
 	\includegraphics[width=1\textwidth]{graph_inst.png}
-	\caption{Instâncias de 50 x 50}
+	\caption{A(50,50) B(50,50)}
 	\label{instancias}
 \end{figure}
 
-	Na figura \ref{quadradas} foi feito um teste com matrizes quadradas. Tanto a matriz \textbf{A}, quanto a matriz \textbf{B} variaram o tamanho de $ 1 * 1 $ para $ 100 * 100 $. Ou seja, num momento tinham apenas um elemento e no último tinham $10.000$ elementos. A matriz \textbf{C}, no final desse teste, possuía $100.000.000$ elementos.
+	Na Figura \ref{quadradas} foi feito um teste com matrizes quadradas. Tanto a matriz \textbf{A}, quanto a matriz \textbf{B} variaram o tamanho de $ 1 * 1 $ para $ 100 * 100 $. Ou seja, num momento tinham apenas um elemento e no último tinham $10.000$ elementos. A matriz \textbf{C}, no final desse teste, possuía $100.000.000$ elementos. O tempo de processamento aqui já cresceu de maneira exponencial, como era de se esperar por causa da complexidade exponencial do produto de Kronecker.
 
 
-\begin{figure}[h!]
+\begin{figure}[p!]
 	\centering
 	\includegraphics[width=1\textwidth]{graph_quad.png}
 	\caption{Matrizes Quadradas A(x,x) B(x,x)}
 	\label{quadradas}
 \end{figure}
 
+	Os últimos dois testes foram configurados da seguinte maneira: fixamos as colunas e variamos as linhas e vice-versa.
 
-%Para melhor visualização, geramos um gráfico com os dados da Tabela \ref{tabela_teste1}. O algorimo BMH possui o melhor desempenho quando se trata de tempo de execução. Para uma música de $225.240$ notas e um trecho de $32$ ele demorou cerca de $0.000389$ segundos para pesquisar o padrão por todo o texto.
-
-%Os dois métodos que tiveram o pior resultado foi o Força Bruta e o KMP. Na grande maioria dos casos o KMP registrou um tempo de execução maior que o de força bruta. Isso ocorre pois ele precisa pré-processar o padrão e gerar a tabela de deslocamento. 
-
+No primeiro, Figura \ref{linhas}, fixamos as colunas das matrizes em $10$ e variamos as linhas até $500$, ou seja, a matriz \textbf{C} começou com tamanho $1 * 100$ ($100$ elementos) e terminou com um tamanho de $250.000 * 100$ ($25.000.000$ elementos); no segundo, Figura \ref{colunas}, fixamos as linhas das matrizes em $10$ e variamos as colunas até $500$. O tempo de processamento desses testes se encontra nas figuras abaixo:
 
 \begin{figure}[p!]
 	\centering
 	\includegraphics[width=1\textwidth]{graph_lin.png}
-	\caption{Quadradas}
-	\label{lin}
+	\caption{Linhas - A(x,10) B(x,10)}
+	\label{linhas}
 \end{figure}
-
-
-
-\begin{table}[p!]
-\centering
-\begin{footnotesize}
-\begin{tabular}{|c|c|c|c|c|c|}
-\hline
-\textbf{Tamanho da música}  & \textbf{Tamanho da trecho}    & \textbf{Forca Bruta}  & \textbf{KMP}  & \textbf{BMH}  & \textbf{ShiftAndExato}  \\ \hline
-195 & 19 	& 355& 389& 434    	& 628	 \\ \hline 
-238 & 22 	& 1063& 475& 510    	& 747	 \\ \hline 
-1461 & 25 	& 3622& 2921& 3168    	& 4628	 \\ \hline 
-1578 & 12 	& 7763& 3155& 3576    	& 5153	 \\ \hline 
-1972 & 23 	& 9054& 3943& 4310    	& 6281	 \\ \hline 
-3705 & 19 	& 13656& 7409& 8240    	& 11944	 \\ \hline 
-6758 & 45 	& 25373& 13515& 14922    	& 21679	 \\ \hline 
-9385 & 22 	& 40408& 18769& 20728    	& 30112	 \\ \hline 
-9750 & 35 	& 49545& 19499& 20876    	& 20891	 \\ \hline 
-18770 & 22 	& 58390& 37539& 41460    	& 60229	 \\ \hline 
-37540 & 31 	& 135250& 75079& 82078    	& 119617	 \\ \hline 
-75080 & 32 	& 269716& 150159& 163710    	& 238789	 \\ \hline 
-112620 & 32 	& 463968& 225239& 245566    	& 358185	 \\ \hline 
-150160 & 32 	& 658444& 300319& 327422    	& 477581	 \\ \hline 
-225240 & 32 	& 928000& 450479& 491134    	& 716373	 \\ \hline 
-
-
-\end{tabular}
-\end{footnotesize}
-\caption{Número de comparações de cada algoritmo \label{tabela_teste2}}
-\end{table}
-
-Aqui o algoritmo com o menor número de comparações é o KMP. Isso acontece por causa da tabela de deslocamentos, que permite que o algoritmo caminhe melhor pela melodia. O número de comparações do BMH é muito parecido com o do KMP, a partir de uma melodia de tamanho relativamente grande.
-
-Os algoritmos ShiftAndExato e Força Bruta possuem uma quantidade de comparações muito maior que dos dois outros algoritmos. Isso já era esperado pois esses dois algoritmos realizam mais comparações a cada iteração que os outros.
 
 \begin{figure}[p!]
-\centering
-{
-\centering
-}
-\caption{Comparações de cada algoritmo \label{grafico2}}
+	\centering
+	\includegraphics[width=1\textwidth]{graph_col.png}
+	\caption{Colunas - A(10,x) B(10,x)}
+	\label{colunas}
 \end{figure}
-
 
 \section{CONCLUSÃO}
 \label{conclusao}
 
-A ideia das comparações feitas na última seção é demonstrar que as análises de complexidade de cada algoritmo está correta. Então isso explica o porquê do KMP e do Força Bruta possuírem o maior tempo de processamento. O Força Bruta por motivos óbvios, o KMP pois ele computa o sufixo mais longo da música que também é prefixo do trecho.
+O problema de calcular o produto de Kronecker das matriz foi um problema sem muitas complicações. As matrizes foram alocadas dinâmicamente com sucesso, de acordo com o \textit{Valgrind}. Além disso, um padrão de código bem modularizado foi seguido, para que os módulos possam ser reutilizados futuramente.
 
-Já era esperado que o algoritmo BMH fosse o que obtivesse os melhores resultados, pois o caso esperado na fase de pesquisa é $O(n/m)$. Seguido pelo Shift And Exato que possui complexidade de $O(n)$. Por último a complexidade de $O(n * m)$ do Força Bruta e KMP.
+Os testes foram bem sucedidos pois o tempo de processamento do algoritmo em diversas situações ocorreu exatamente como esperado.
 
-Então podemos dizer que os algoritmos funcionam de acordo com a ordem de complexidade de cada um. E o problema proposto, de encontrar trechos suspeito de plágio em outras músicas, foi resolvido com sucesso.
+Como primeiro trabalho da disciplina, acredito que seus objetivos foram cumpridos. As primitivas básicas da linguagem C, como alocação dinâmica de memória e manipulação de arquivos, foram bem exploradas no trabalho prático.
 
 \bibliographystyle{sbc}
 \bibliography{tp0}

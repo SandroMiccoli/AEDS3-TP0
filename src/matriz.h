@@ -23,9 +23,8 @@ int ** mallocaMatriz(int col, int lin);
 
 void destroiMatriz(Matriz *matriz);
 
-void limpaMatrizes(Matriz * m, int k);
 
-// Leitura
+// Leitura e Escrita
 void leMatrizes(FILE * arquivo, int k, Matriz * matrizes);
 
 void preencheMatriz(FILE * arquivo, Matriz m);

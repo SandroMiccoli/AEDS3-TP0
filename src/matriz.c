@@ -88,7 +88,7 @@ void imprimeMatriz(Matriz m){
         }
 }
 
-// Imprime todos os valores da matriz
+// Imprime todos os valores da matriz no arquivo
 void imprimeMatrizNoArquivo(FILE * arquivo, Matriz m){
     fprintf(arquivo,"%d %d\n", m.col, m.lin);
     for (int x=0; x < m.col; x++){
